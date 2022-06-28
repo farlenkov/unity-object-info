@@ -1,0 +1,16 @@
+{
+    "name": "Game.Info.Runtime",
+    "rootNamespace": "",
+    "references": [
+        "GUID:b21f4b1d6baf90041aa6a65bca236026"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

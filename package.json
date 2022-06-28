@@ -1,0 +1,15 @@
+{
+  "name": "com.farlenkov.unity-object-info",
+  "displayName": "GAME / INFO",
+  "version": "1.0.0",
+  "unity": "2021.3",
+  "description": "Object Info",
+  "keywords": [
+    ""
+  ],
+  "type": "library",
+  "author": {
+    "name": "Mike Farlenkov",
+    "url": "https://farlenkov.com"
+  }
+}
