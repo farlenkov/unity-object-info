@@ -124,16 +124,27 @@ namespace UnityObjectInfo
             var show = Foldouts.GetItem(foldout_key);
             var component_type = component.GetType();
 
-            show = EditorGUILayout.BeginFoldoutHeaderGroup(
-                show,
-                component.ShortName,
-                null,
-                (pos) =>
-                {
-                    var menu = new GenericMenu();
-                    menu.AddItem(new GUIContent("Remove"), false, () => { RemoveComponent(Target, component, component_ref); });
-                    menu.DropDown(pos);
-                });
+            //show = EditorGUILayout.BeginFoldoutHeaderGroup(
+            //    show,
+            //    component.ShortName,
+            //    null,
+            //    (pos) =>
+            //    {
+            //        var menu = new GenericMenu();
+            //        menu.AddItem(new GUIContent("Remove"), false, () => { RemoveComponent(Target, component, component_ref); });
+            //        menu.DropDown(pos);
+            //    });
+
+            // FOLDOUT HEADER
+
+            GUILayout.BeginHorizontal();
+            GUI.skin.button.alignment = TextAnchor.MiddleLeft;
+            show = GUILayout.Toggle(show, (show ? "[-] ":"[+] ") +  component.ShortName, "Button");
+            GUI.skin.button.alignment = TextAnchor.MiddleCenter;
+            var remove = GUILayout.Button("Remove", GUILayout.Width(80));
+            GUILayout.EndHorizontal();
+
+            // COMPONENT EDITOR
 
             if (show)
             {
@@ -147,7 +158,9 @@ namespace UnityObjectInfo
             }
 
             Foldouts.SetItem(foldout_key, show);
-            EditorGUILayout.EndFoldoutHeaderGroup();
+
+            if (remove)
+                RemoveComponent(Target, component, component_ref);
         }
 
         static void RemoveComponent(
