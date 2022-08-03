@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace UnityObjectInfo
 {
-    [CreateAssetMenu]
+    //[CreateAssetMenu]
     public class SampleEntity : EntityInfo
     {
         [HideInInspector]
