@@ -15,7 +15,83 @@ namespace UnityObjectInfo
 
         // STATIC
 
-        public static INFO GetInfo<INFO>(int id) where INFO : ObjectInfo
+        static List<ObjectInfo> All;// { get; private set; }
+        static Dictionary<int, ObjectInfo> ByID;// { get; private set; }
+        static Dictionary<Type, object> ByType;// { get; private set; }
+
+        public static void Load()
+        {
+            var assets = Resources.LoadAll<ObjectInfo>("Info");
+            All = new List<ObjectInfo>(assets);
+            ByID = new Dictionary<int, ObjectInfo>(assets.Length);
+            ByType = new Dictionary<Type, object>();
+
+            foreach (var asset in assets)
+                ByID.Add(asset.ID, asset);
+        }
+
+        public static bool TryGetByID<INFO>(int id, out INFO info) where INFO : ObjectInfo
+        {
+            if (All == null)
+            {
+                Log.Error("[ObjectInfo: TryGetByID] All == null");
+                info = null;
+                return false;
+            }
+
+            if (ByID.TryGetValue(id, out var asset))
+            {
+                if (typeof(INFO).IsAssignableFrom(asset.GetType()))
+                {
+                    info = asset as INFO;
+                    return true;
+                }
+                else
+                {
+                    Log.Error(
+                        "[ObjectInfo: TryGetByID] Incompatible type: {0} but expected {1}",
+                        asset.GetType(),
+                        typeof(INFO));
+                }
+            }
+
+            info = null;
+            return false;
+        }
+
+        public static bool TryGetByType<INFO>(out List<INFO> info_list) where INFO : ObjectInfo
+        {
+            if (ByType.TryGetValue(typeof(INFO), out var obj_list))
+            {
+                info_list = (List<INFO>)obj_list;
+                return true;
+            }
+
+            info_list = null;
+
+            for (var i = 0; i < All.Count; i++)
+            {
+                var info = All[i];
+
+                if (typeof(INFO).IsAssignableFrom(info.GetType()))
+                {
+                    if (info_list == null)
+                        info_list = new List<INFO>();
+
+                    info_list.Add(info as INFO);
+                }
+            }
+
+            if (info_list == null)
+                return false;
+
+            ByType.Add(typeof(INFO), info_list);
+            return true;
+        }
+
+#if UNITY_EDITOR
+
+        public static INFO LoadInfo<INFO>(int id) where INFO : ObjectInfo
         {
             var infos = Resources.LoadAll<INFO>("");
 
@@ -29,5 +105,7 @@ namespace UnityObjectInfo
 
             return null;
         }
+
+#endif
     }
 }

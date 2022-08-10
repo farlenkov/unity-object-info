@@ -13,6 +13,6 @@ namespace UnityObjectInfo
     [Serializable]
     public class EntityInfoRef : InfoRef<EntityInfo>
     {
-        protected override Dictionary<int, EntityInfo> Index => null;
+
     }
 }

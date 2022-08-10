@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityUtility;
 
 namespace UnityObjectInfo
 {
@@ -38,20 +39,23 @@ namespace UnityObjectInfo
     {
         public override Type InfoType => typeof(INFO);
 
-        protected virtual Dictionary<int, INFO> Index => null;
+        INFO AssetCache;
 
         public INFO GetAsset()
         {
-            if (Index != null)
+            if (AssetCache != null)
+                return AssetCache;
+
+            if (ObjectInfo.TryGetByID<INFO>(ID, out var asset))
             {
-                Index.TryGetValue(ID, out var preset);
-                return preset;
+                AssetCache = asset;
+                return AssetCache;
             }
 
 #if UNITY_EDITOR
 
             if (!Application.isPlaying)
-                return ObjectInfo.GetInfo<INFO>(ID);
+                return ObjectInfo.LoadInfo<INFO>(ID);
 #endif
 
             return null;

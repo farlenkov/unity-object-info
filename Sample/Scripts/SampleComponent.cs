@@ -37,6 +37,6 @@ namespace UnityObjectInfo
     [Serializable]
     public class SampleComponentRef : InfoRef<SampleComponent>
     {
-        protected override Dictionary<int, SampleComponent> Index => null;
+
     }
 }
