@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityUtility;
 
@@ -18,12 +17,12 @@ namespace UnityObjectInfo
         public string ShortName;
 
         [NonSerialized]
-        Editor MyEditor;
+        UnityEditor.Editor MyEditor;
 
-        public Editor GetEditor()
+        public UnityEditor.Editor GetEditor()
         {
             if (MyEditor == null)
-                MyEditor = Editor.CreateEditor(this);
+                MyEditor = UnityEditor.Editor.CreateEditor(this);
 
             return MyEditor;
         }

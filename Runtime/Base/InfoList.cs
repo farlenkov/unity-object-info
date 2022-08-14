@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityUtility;
 
 namespace UnityObjectInfo
 {
@@ -11,14 +8,16 @@ namespace UnityObjectInfo
         public virtual Type InfoType => typeof(ObjectInfo);
     }
 
-    public abstract class InfoList<INFO> : InfoList where INFO : ObjectInfo
+    public class InfoList<INFO> : InfoList where INFO : ObjectInfo
     {
+        static System.Random random = new System.Random();
+
         public override Type InfoType => typeof(INFO);
 
         // IN MEMORY CACHE
 
-        [NonSerialized] public List<INFO> Enabled;
-        [NonSerialized] public Dictionary<int, INFO> ByID;
+        public List<INFO> Enabled { get; private set; }
+        public Dictionary<int, INFO> ByID { get; private set; }
 
         public int Count => all.Count;
         public INFO this[int index] => all[index];
@@ -63,7 +62,9 @@ namespace UnityObjectInfo
 
         public void Clear()
         {
-            all.Clear();
+            all?.Clear();
+            Enabled?.Clear();
+            ByID?.Clear();
         }
 
         public bool Contains(INFO item)
@@ -71,9 +72,24 @@ namespace UnityObjectInfo
             return all.Contains(item);
         }
 
-        public INFO GetRandom()
+        public INFO GetRandomEnabled()
         {
-            return all.GetRandom();
+            var count = Enabled?.Count;
+
+            if (count == 0)
+            {
+                return default;
+            }
+            else if (count == 1)
+            {
+                return Enabled[0];
+            }
+            else
+            {
+                // TODO: check offset is in range 0..list.Count
+                var index = random.Next(0, Enabled.Count);
+                return Enabled[index];
+            }
         }
 
         // INIT METHODS

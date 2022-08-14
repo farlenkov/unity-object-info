@@ -19,6 +19,8 @@ namespace UnityObjectInfo
         static Dictionary<int, ObjectInfo> ByID;// { get; private set; }
         static Dictionary<Type, object> ByType;// { get; private set; }
 
+#if UNITY_2017_1_OR_NEWER
+
         public static void Load()
         {
             var assets = Resources.LoadAll<ObjectInfo>("Info");
@@ -29,6 +31,8 @@ namespace UnityObjectInfo
             foreach (var asset in assets)
                 ByID.Add(asset.ID, asset);
         }
+
+#endif
 
         public static bool TryGetByID<INFO>(int id, out INFO info) where INFO : ObjectInfo
         {
@@ -59,11 +63,11 @@ namespace UnityObjectInfo
             return false;
         }
 
-        public static bool TryGetByType<INFO>(out List<INFO> info_list) where INFO : ObjectInfo
+        public static bool TryGetByType<INFO>(out InfoList<INFO> info_list) where INFO : ObjectInfo
         {
             if (ByType.TryGetValue(typeof(INFO), out var obj_list))
             {
-                info_list = (List<INFO>)obj_list;
+                info_list = (InfoList<INFO>)obj_list;
                 return true;
             }
 
@@ -76,7 +80,7 @@ namespace UnityObjectInfo
                 if (typeof(INFO).IsAssignableFrom(info.GetType()))
                 {
                     if (info_list == null)
-                        info_list = new List<INFO>();
+                        info_list = new InfoList<INFO>();
 
                     info_list.Add(info as INFO);
                 }
@@ -85,6 +89,7 @@ namespace UnityObjectInfo
             if (info_list == null)
                 return false;
 
+            info_list.Init();
             ByType.Add(typeof(INFO), info_list);
             return true;
         }
