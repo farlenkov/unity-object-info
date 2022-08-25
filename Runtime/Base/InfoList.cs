@@ -1,3 +1,5 @@
+
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -12,14 +14,21 @@ namespace UnityObjectInfo
     {
         static System.Random random = new System.Random();
 
+        [JsonIgnore]
         public override Type InfoType => typeof(INFO);
 
         // IN MEMORY CACHE
 
+        [JsonIgnore]
         public List<INFO> Enabled { get; private set; }
+
+        [JsonIgnore]
         public Dictionary<int, INFO> ByID { get; private set; }
 
+        [JsonIgnore]
         public int Count => all.Count;
+
+        [JsonIgnore]
         public INFO this[int index] => all[index];
 
         // SERIALIZABLE data

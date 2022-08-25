@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityUtility;
 
@@ -37,6 +38,7 @@ namespace UnityObjectInfo
     [Serializable]
     public class InfoRef<INFO> : InfoRef where INFO : ObjectInfo
     {
+        [JsonIgnore]
         public override Type InfoType => typeof(INFO);
 
         INFO AssetCache;
