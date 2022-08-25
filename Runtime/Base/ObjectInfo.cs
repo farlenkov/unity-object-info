@@ -21,7 +21,7 @@ namespace UnityObjectInfo
 
 #if UNITY_2017_1_OR_NEWER
 
-        public static void Load()
+        public static void LoadFromResources()
         {
             var assets = Resources.LoadAll<ObjectInfo>("Info");
             All = new List<ObjectInfo>(assets);
@@ -34,6 +34,23 @@ namespace UnityObjectInfo
 
 #endif
 
+        public static void LoadFromList<ITEM, LIST>(LIST list) 
+            where ITEM : ObjectInfo
+            where LIST : InfoList<ITEM>
+        {
+            All = All ?? new List<ObjectInfo>();
+            ByID = ByID ?? new Dictionary<int, ObjectInfo>();
+            ByType = ByType ?? new Dictionary<Type, object>();
+
+            ByType.Add(typeof(ITEM), list);
+
+            foreach (var asset in list.All)
+            {
+                All.Add(asset);
+                ByID.Add(asset.ID, asset);
+            }
+        }
+         
         public static bool TryGetByID<INFO>(int id, out INFO info) where INFO : ObjectInfo
         {
             if (All == null)
