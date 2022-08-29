@@ -42,6 +42,7 @@ namespace UnityObjectInfo
             ByID = ByID ?? new Dictionary<int, ObjectInfo>();
             ByType = ByType ?? new Dictionary<Type, object>();
 
+            list.Init();
             ByType.Add(typeof(ITEM), list);
 
             foreach (var asset in list.All)
