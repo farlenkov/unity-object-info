@@ -43,7 +43,7 @@ namespace UnityObjectInfo
             ByType = ByType ?? new Dictionary<Type, object>();
 
             list.Init();
-            ByType.Add(typeof(ITEM), list);
+            ByType.Add(typeof(LIST), list);
 
             foreach (var asset in list.All)
             {
@@ -81,11 +81,13 @@ namespace UnityObjectInfo
             return false;
         }
 
-        public static bool TryGetByType<INFO>(out InfoList<INFO> info_list) where INFO : ObjectInfo
+        public static bool TryGetByType<INFO, LIST>(out LIST info_list) 
+            where INFO : ObjectInfo
+            where LIST : InfoList<INFO>, new ()
         {
-            if (ByType.TryGetValue(typeof(INFO), out var obj_list))
+            if (ByType.TryGetValue(typeof(LIST), out var obj_list))
             {
-                info_list = (InfoList<INFO>)obj_list;
+                info_list = (LIST)obj_list;
                 return true;
             }
 
@@ -98,7 +100,7 @@ namespace UnityObjectInfo
                 if (typeof(INFO).IsAssignableFrom(info.GetType()))
                 {
                     if (info_list == null)
-                        info_list = new InfoList<INFO>();
+                        info_list = new LIST();
 
                     info_list.Add(info as INFO);
                 }
@@ -108,8 +110,13 @@ namespace UnityObjectInfo
                 return false;
 
             info_list.Init();
-            ByType.Add(typeof(INFO), info_list);
+            ByType.Add(typeof(LIST), info_list);
             return true;
+        }
+
+        public static bool TryGetByType<INFO>(out InfoList<INFO> info_list) where INFO : ObjectInfo
+        {
+            return TryGetByType<INFO, InfoList<INFO>>(out info_list);
         }
 
 #if UNITY_EDITOR
