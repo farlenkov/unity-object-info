@@ -8,6 +8,29 @@ namespace UnityObjectInfo
     public abstract class InfoList
     {
         public virtual Type InfoType => typeof(ObjectInfo);
+
+        [JsonIgnore]
+        public virtual int Count => 0;
+
+        public virtual void Init()
+        {
+
+        }
+
+        internal virtual void AddToObjectInfoCache()
+        {
+
+        }
+    
+        internal virtual void AddArray(object[] objects)
+        {
+
+        }
+
+        internal virtual void Add(ObjectInfo item)
+        {
+
+        }
     }
 
     public class InfoList<INFO> : InfoList where INFO : ObjectInfo
@@ -26,7 +49,7 @@ namespace UnityObjectInfo
         public Dictionary<int, INFO> ByID { get; private set; }
 
         [JsonIgnore]
-        public int Count => all.Count;
+        public override int Count => all.Count;
 
         [JsonIgnore]
         public INFO this[int index] => all[index];
@@ -50,9 +73,9 @@ namespace UnityObjectInfo
 
         // PROXY METHODS
 
-        public void Add(INFO item)
+        internal override void Add(ObjectInfo item)
         {
-            all.Add(item);
+            all.Add((INFO)item);
         }
 
         public void AddRange(IEnumerable<INFO> collection)
@@ -60,7 +83,7 @@ namespace UnityObjectInfo
             all.AddRange(collection);
         }
 
-        public void AddArray(object[] array)
+        internal override void AddArray(object[] array)
         {
             for (var i = 0; i < array.Length; i++)
             {
@@ -103,7 +126,7 @@ namespace UnityObjectInfo
 
         // INIT METHODS
 
-        public virtual void Init()
+        public override void Init()
         {
             Enabled = new List<INFO>();
             ByID = new Dictionary<int, INFO>();
@@ -115,6 +138,15 @@ namespace UnityObjectInfo
 
                 if (item.Enabled)
                     Enabled.Add(item);
+            }
+        }
+
+        internal override void AddToObjectInfoCache()
+        {
+            foreach (var asset in All)
+            {
+                ObjectInfo.All.Add(asset);
+                ObjectInfo.ByID.Add(asset.ID, asset);
             }
         }
     }

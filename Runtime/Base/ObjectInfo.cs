@@ -15,40 +15,56 @@ namespace UnityObjectInfo
 
         // STATIC
 
-        static List<ObjectInfo> All;// { get; private set; }
-        static Dictionary<int, ObjectInfo> ByID;// { get; private set; }
-        static Dictionary<Type, object> ByType;// { get; private set; }
+        internal static List<ObjectInfo> All { get; private set; }
+        internal static Dictionary<int, ObjectInfo> ByID { get; private set; }
+        internal static Dictionary<Type, InfoList> ByType { get; private set; }
 
 #if UNITY_2017_1_OR_NEWER
 
-        public static void LoadFromResources()
+        public static T LoadFromResources<T>(string path = "Info")
+            where T : new()
         {
-            var assets = Resources.LoadAll<ObjectInfo>("Info");
-            All = new List<ObjectInfo>(assets);
-            ByID = new Dictionary<int, ObjectInfo>(assets.Length);
-            ByType = new Dictionary<Type, object>();
+            var rootObject = new T();
+            var listType = typeof(InfoList);
+            var sourceType = rootObject.GetType();
+            var sourceFields = sourceType.GetFields();
 
-            foreach (var asset in assets)
-                ByID.Add(asset.ID, asset);
+            foreach (var field in sourceFields)
+            {
+                if (!listType.IsAssignableFrom(field.FieldType))
+                    continue;
+
+                var list = (InfoList)Activator.CreateInstance(field.FieldType);
+                var items = Resources.LoadAll(path, list.InfoType);
+                list.AddArray(items);
+                field.SetValue(rootObject, list);
+            }
+
+            return rootObject;
         }
 
 #endif
 
-        public static void LoadFromList<ITEM, LIST>(LIST list) 
-            where ITEM : ObjectInfo
-            where LIST : InfoList<ITEM>
+        public static void LoadFromObjectFields(object sourceObject)
         {
-            All = All ?? new List<ObjectInfo>();
-            ByID = ByID ?? new Dictionary<int, ObjectInfo>();
-            ByType = ByType ?? new Dictionary<Type, object>();
+            var listType = typeof(InfoList);
+            var sourceType = sourceObject.GetType();
+            var sourceFields = sourceType.GetFields();
 
-            list.Init();
-            ByType.Add(typeof(LIST), list);
-
-            foreach (var asset in list.All)
+            foreach (var field in sourceFields)
             {
-                All.Add(asset);
-                ByID.Add(asset.ID, asset);
+                if (!listType.IsAssignableFrom(field.FieldType))
+                    continue;
+
+                var list = (InfoList)field.GetValue(sourceObject);
+
+                All = All ?? new List<ObjectInfo>();
+                ByID = ByID ?? new Dictionary<int, ObjectInfo>();
+                ByType = ByType ?? new Dictionary<Type, InfoList>();
+
+                ByType.Add(list.GetType(), list);
+                list.AddToObjectInfoCache();
+                list.Init();
             }
         }
          
@@ -81,9 +97,8 @@ namespace UnityObjectInfo
             return false;
         }
 
-        public static bool TryGetByType<INFO, LIST>(out LIST info_list) 
-            where INFO : ObjectInfo
-            where LIST : InfoList<INFO>, new ()
+        public static bool TryGetByType<LIST>(out LIST info_list)
+            where LIST : InfoList, new()
         {
             if (ByType.TryGetValue(typeof(LIST), out var obj_list))
             {
@@ -91,22 +106,17 @@ namespace UnityObjectInfo
                 return true;
             }
 
-            info_list = null;
+            info_list = new LIST();
 
             for (var i = 0; i < All.Count; i++)
             {
                 var info = All[i];
 
-                if (typeof(INFO).IsAssignableFrom(info.GetType()))
-                {
-                    if (info_list == null)
-                        info_list = new LIST();
-
-                    info_list.Add(info as INFO);
-                }
+                if (info_list.InfoType.IsAssignableFrom(info.GetType()))
+                    info_list.Add(info);
             }
 
-            if (info_list == null)
+            if (info_list.Count == 0)
                 return false;
 
             info_list.Init();
@@ -116,7 +126,7 @@ namespace UnityObjectInfo
 
         public static bool TryGetByType<INFO>(out InfoList<INFO> info_list) where INFO : ObjectInfo
         {
-            return TryGetByType<INFO, InfoList<INFO>>(out info_list);
+            return TryGetByType<InfoList<INFO>>(out info_list);
         }
 
 #if UNITY_EDITOR
