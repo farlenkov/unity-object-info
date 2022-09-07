@@ -129,6 +129,24 @@ namespace UnityObjectInfo
             return TryGetByType<InfoList<INFO>>(out info_list);
         }
 
+        public static bool TryGetFirst<INFO>(out INFO info) where INFO : ObjectInfo
+        {
+            if(!TryGetByType<INFO>(out var list))
+            {
+                info = default;
+                return false;
+            }
+
+            if (list.Count == 0)
+            {
+                info = default;
+                return false;
+            }
+
+            info = list[0];
+            return true;
+        }
+
 #if UNITY_EDITOR
 
         public static INFO LoadInfo<INFO>(int id) where INFO : ObjectInfo
