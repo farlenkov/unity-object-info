@@ -57,14 +57,18 @@ namespace UnityObjectInfo
                     continue;
 
                 var list = (InfoList)field.GetValue(sourceObject);
+                var type = list.GetType();
 
                 All = All ?? new List<ObjectInfo>();
                 ByID = ByID ?? new Dictionary<int, ObjectInfo>();
                 ByType = ByType ?? new Dictionary<Type, InfoList>();
 
-                ByType.Add(list.GetType(), list);
-                list.AddToObjectInfoCache();
-                list.Init();
+                if (!ByType.ContainsKey(type))
+                {
+                    ByType.Add(type, list);
+                    list.AddToObjectInfoCache();
+                    list.Init();
+                }
             }
         }
          
