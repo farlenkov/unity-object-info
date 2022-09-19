@@ -51,6 +51,10 @@ namespace UnityObjectInfo
             var sourceType = sourceObject.GetType();
             var sourceFields = sourceType.GetFields();
 
+            All = new List<ObjectInfo>();
+            ByID = new Dictionary<int, ObjectInfo>();
+            ByType = new Dictionary<Type, InfoList>();
+
             foreach (var field in sourceFields)
             {
                 if (!listType.IsAssignableFrom(field.FieldType))
@@ -58,10 +62,6 @@ namespace UnityObjectInfo
 
                 var list = (InfoList)field.GetValue(sourceObject);
                 var type = list.GetType();
-
-                All = All ?? new List<ObjectInfo>();
-                ByID = ByID ?? new Dictionary<int, ObjectInfo>();
-                ByType = ByType ?? new Dictionary<Type, InfoList>();
 
                 if (!ByType.ContainsKey(type))
                 {
