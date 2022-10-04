@@ -10,7 +10,7 @@ namespace UnityObjectInfo
     [Serializable]
     public class InfoRef 
     {
-        public int ID;
+        public ushort ID;
         public virtual Type InfoType => typeof(ObjectInfo);
 
         public override bool Equals(object obj)
@@ -43,7 +43,7 @@ namespace UnityObjectInfo
 
         INFO AssetCache;
 
-        public INFO GetAsset()
+        public virtual INFO GetAsset()
         {
             if (AssetCache != null)
                 return AssetCache;

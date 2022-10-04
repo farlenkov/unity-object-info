@@ -120,7 +120,7 @@ namespace UnityObjectInfo
             return enm.Current;
         }
 
-        public static int PresetField(
+        public static ushort PresetField(
             string label,
             int id,
             Rect position,
@@ -146,7 +146,7 @@ namespace UnityObjectInfo
                 return 0;
         }
 
-        public static int PresetField(
+        public static ushort PresetField(
             string label,
             int id,
             Type preset_type,
@@ -183,7 +183,7 @@ namespace UnityObjectInfo
             where REF : InfoRef<PRESET>, new()
         {
             var is_dirty = false;
-            var new_id = 0;
+            var new_id = (ushort)0;
 
             if (list == null)
                 list = new List<REF>();

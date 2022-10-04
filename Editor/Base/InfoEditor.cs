@@ -57,7 +57,7 @@ namespace UnityObjectInfo
                 return 0;
         }
 
-        public static int Field<INFO>(
+        public static ushort Field<INFO>(
             string label, 
             int id, 
             Rect position) 
