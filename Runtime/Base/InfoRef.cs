@@ -48,6 +48,9 @@ namespace UnityObjectInfo
             if (AssetCache != null)
                 return AssetCache;
 
+            if (ID == 0)
+                return default;
+
             if (ObjectInfo.TryGetByID<INFO>(ID, out var asset))
             {
                 AssetCache = asset;
