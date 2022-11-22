@@ -65,7 +65,25 @@ namespace UnityObjectInfo
 
             return null;
         }
-    }
+
+#if UNITY_EDITOR
+
+        public virtual INFO GetEditorAsset()
+        {
+            var all = Resources.LoadAll<INFO>("");
+
+            for (var i = 0; i < all.Length; i++)
+            {
+                var item = all[i];
+
+                if (item.ID == ID)
+                    return item;
+            }
+
+            return null;
+        }
+#endif
+        }
 
     public static class InfoRefExt
     {
