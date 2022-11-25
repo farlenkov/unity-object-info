@@ -63,8 +63,15 @@ namespace UnityObjectInfo
                 return ObjectInfo.LoadInfo<INFO>(ID);
 #endif
 
-            return null;
+            return default;
         }
+
+#if UNITY_2017_1_OR_NEWER
+        public virtual INFO GetAssetOrDefault()
+        {
+            return GetAsset() ?? ScriptableObject.CreateInstance<INFO>();
+        }
+#endif
 
 #if UNITY_EDITOR
 
