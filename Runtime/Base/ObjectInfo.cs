@@ -61,6 +61,17 @@ namespace UnityObjectInfo
                     continue;
 
                 var list = (InfoList)field.GetValue(sourceObject);
+
+                if (list == null)
+                {
+                    Log.Error(
+                        "[ObjectInfo: LoadFromObjectFields] ERROR: {0}.{1} is null", 
+                        sourceType.Name, 
+                        field.Name);
+
+                    continue;
+                }
+
                 var type = list.GetType();
 
                 if (!ByType.ContainsKey(type))
