@@ -12,7 +12,7 @@ namespace UnityObjectInfo
     [CustomEditor(typeof(EntityInfo), true)]
     public class EntityEditor : InfoEditor
     {
-        EntityInfo Target => target as EntityInfo;
+        protected EntityInfo Target => target as EntityInfo;
         static Dictionary<string, bool> Foldouts;
 
         // DRAW
