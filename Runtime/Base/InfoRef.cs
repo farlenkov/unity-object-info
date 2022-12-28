@@ -89,8 +89,14 @@ namespace UnityObjectInfo
 
             return null;
         }
-#endif
+        
+        public virtual bool TryGetEditorAsset(out INFO asset)
+        {
+            asset = GetEditorAsset();
+            return asset != null;
         }
+#endif
+    }
 
     public static class InfoRefExt
     {
