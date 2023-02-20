@@ -19,6 +19,8 @@ namespace UnityObjectInfo
         internal static Dictionary<int, ObjectInfo> ByID { get; private set; }
         internal static Dictionary<Type, InfoList> ByType { get; private set; }
 
+        public static bool IsLoaded => ByType != null;
+
 #if UNITY_2017_1_OR_NEWER
 
         public static T LoadFromResources<T>(string path = "Info")
