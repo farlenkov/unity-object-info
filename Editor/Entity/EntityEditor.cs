@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,26 +60,38 @@ namespace UnityObjectInfo
             {
                 var selected_field = component_fields[selected_index - 1];
                 var selected_ref = selected_field.GetValue(Target) as InfoRef;
-                var component = (ComponentInfo)CreateInstance(selected_ref.InfoType);
-
-                component.name = $"{Target.name}_{selected_field.Name}";
-                component.Entity = new EntityInfoRef() { ID = Target.ID };
-                component.ShortName = selected_field.Name;
-
-                AssetDatabase.AddObjectToAsset(component, Target);
-                EditorUtility.SetDirty(Target);
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
-
+                var component = AddComponent(Target, selected_ref.InfoType, selected_field.Name);
+                
                 selected_ref.ID = component.ID;
+
                 EditorUtility.SetDirty(Target);
                 AssetDatabase.SaveAssets();
             }
         }
 
-        protected void DrawComponentOld(EntityInfo Target)
+        public static T AddComponent<T>(EntityInfo entityInfo, string name) where T : ComponentInfo
         {
-            var components = LoadComponents(Target);
+            return (T)AddComponent(entityInfo, typeof(T), name);
+        }
+
+        public static ComponentInfo AddComponent(EntityInfo entityInfo, Type type, string name)
+        {
+            var component = (ComponentInfo)CreateInstance(type);
+            component.name = $"{entityInfo.name}_{name}";
+            component.Entity = new EntityInfoRef() { ID = entityInfo.ID };
+            component.ShortName = name;
+
+            AssetDatabase.AddObjectToAsset(component, entityInfo);
+            EditorUtility.SetDirty(entityInfo);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            return component;
+        }
+
+        protected void DrawComponentOld(EntityInfo Target, bool drawUnlinked = true)
+        {
+            var components = LoadComponents<ComponentInfo>(Target);
             var component_fields = GetComponentFields(Target);
 
             foreach (var component_field in component_fields)
@@ -99,7 +112,8 @@ namespace UnityObjectInfo
                 }
             }
 
-            if (components.Count > 0)
+            if (drawUnlinked &&
+                components.Count > 0)
             {
                 GUILayout.Space(10);
                 GUILayout.Label("UNLINKED COMPONENTS (ERROR):");
@@ -189,7 +203,7 @@ namespace UnityObjectInfo
         {
             var is_dirty = false;
             var component_fields = GetComponentFields(Target);
-            var components = LoadComponents(Target);
+            var components = LoadComponents<ComponentInfo>(Target);
 
             foreach (var component_field in component_fields)
             {
@@ -277,16 +291,18 @@ namespace UnityObjectInfo
             return result;
         }
 
-        public static List<ComponentInfo> LoadComponents(EntityInfo info)
+        public static List<T> LoadComponents<T>(EntityInfo info, bool sortByName = true) where T : ComponentInfo
         {
             var assets = AssetDatabase.LoadAllAssetRepresentationsAtPath(AssetDatabase.GetAssetPath(info));
-            var components = new List<ComponentInfo>();
+            var components = new List<T>();
 
             foreach (var asset in assets)
-                if (asset is ComponentInfo component)
+                if (asset is T component)
                     components.Add(component);
 
-            components = components.OrderBy(o => o.name).ToList();
+            if (sortByName)
+                components = components.OrderBy(o => o.name).ToList();
+
             return components;
         }
     }

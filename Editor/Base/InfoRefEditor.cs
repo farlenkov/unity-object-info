@@ -21,12 +21,12 @@ namespace UnityObjectInfo
             if (prop != null)
             {
                 prop.ID = prop.ID == 0
-                    ? PresetField($"{label.text} [ref]", prop.ID, position, prop.InfoType)
-                    : PresetField($"{label.text} [ref: {prop.ID}]", prop.ID, position, prop.InfoType);
+                    ? InfoField($"{label.text} [ref]", prop.ID, position, prop.InfoType)
+                    : InfoField($"{label.text} [ref: {prop.ID}]", prop.ID, position, prop.InfoType);
             }
             else
             {
-                PresetField(label.text + " [ref]", 0, position, null);
+                InfoField(label.text + " [ref]", 0, position, null);
             }
 
             if (EditorGUI.EndChangeCheck())
@@ -120,67 +120,67 @@ namespace UnityObjectInfo
             return enm.Current;
         }
 
-        public static ushort PresetField(
+        public static ushort InfoField(
             string label,
             int id,
             Rect position,
-            Type preset_type)
+            Type info_type)
         {
-            var presets = Resources.LoadAll<ObjectInfo>("");
-            var preset = (ObjectInfo)null;
+            var info_list = Resources.LoadAll<ObjectInfo>("");
+            var info = (ObjectInfo)null;
 
-            for (var i = 0; i < presets.Length; i++)
+            for (var i = 0; i < info_list.Length; i++)
             {
-                if (presets[i].ID == id)
+                if (info_list[i].ID == id)
                 {
-                    preset = presets[i];
+                    info = info_list[i];
                     break;
                 }
             }
 
-            preset = (ObjectInfo)EditorGUI.ObjectField(position, label, preset, preset_type, false);
+            info = (ObjectInfo)EditorGUI.ObjectField(position, label, info, info_type, false);
 
-            if (preset != null)
-                return preset.ID;
+            if (info != null)
+                return info.ID;
             else
                 return 0;
         }
 
-        public static ushort PresetField(
+        public static ushort InfoField(
             string label,
             int id,
-            Type preset_type,
+            Type info_type,
             params GUILayoutOption[] options)
         {
-            var presets = Resources.LoadAll<ObjectInfo>("");
-            var preset = (ObjectInfo)null;
+            var info_list = Resources.LoadAll<ObjectInfo>("");
+            var info = (ObjectInfo)null;
 
             if (id > 0)
             {
-                for (var i = 0; i < presets.Length; i++)
+                for (var i = 0; i < info_list.Length; i++)
                 {
-                    if (presets[i].ID == id)
+                    if (info_list[i].ID == id)
                     {
-                        preset = presets[i];
+                        info = info_list[i];
                         break;
                     }
                 }
             }
 
             if (label == null)
-                preset = (ObjectInfo)EditorGUILayout.ObjectField(preset, preset_type, false, options);
+                info = (ObjectInfo)EditorGUILayout.ObjectField(info, info_type, false, options);
             else
-                preset = (ObjectInfo)EditorGUILayout.ObjectField(label, preset, preset_type, false, options);
+                info = (ObjectInfo)EditorGUILayout.ObjectField(label, info, info_type, false, options);
 
-            if (preset != null)
-                return preset.ID;
+            if (info != null)
+                return info.ID;
             else
                 return 0;
         }
 
-        public static bool PresetRefList<PRESET, REF>(ref List<REF> list)
-            where PRESET : ObjectInfo
-            where REF : InfoRef<PRESET>, new()
+        public static bool InfoRefList<INFO, REF>(ref List<REF> list)
+            where INFO : ObjectInfo
+            where REF : InfoRef<INFO>, new()
         {
             var is_dirty = false;
             var new_id = (ushort)0;
@@ -191,7 +191,7 @@ namespace UnityObjectInfo
             for (var i = 0; i < list.Count; i++)
             {
                 var item = list[i];
-                new_id = PresetField(null, item.ID, typeof(PRESET));
+                new_id = InfoField(null, item.ID, typeof(INFO));
 
                 if (new_id == 0)
                 {
@@ -212,7 +212,7 @@ namespace UnityObjectInfo
             if (list.Count > 0)
                 GUILayout.Space(6);
 
-            new_id = PresetField(null, 0, typeof(PRESET));
+            new_id = InfoField(null, 0, typeof(INFO));
 
             if (new_id > 0)
             {
@@ -224,9 +224,9 @@ namespace UnityObjectInfo
         }
     }
 
-    public abstract class PresetRefEditor<PROP, PRESET> : PropertyDrawer
+    public abstract class InfoRefEditor<PROP, INFO> : PropertyDrawer
         where PROP : InfoRef
-        where PRESET : ObjectInfo
+        where INFO : ObjectInfo
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -235,9 +235,9 @@ namespace UnityObjectInfo
             var prop = (PROP)property.GetTargetObjectOfProperty();
 
             if (prop != null)
-                prop.ID = InfoEditor.Field<PRESET>(label.text + " [ref]", prop.ID, position);
+                prop.ID = InfoEditor.Field<INFO>(label.text + " [ref]", prop.ID, position);
             else
-                InfoEditor.Field<PRESET>(label.text + " [ref]", 0, position);
+                InfoEditor.Field<INFO>(label.text + " [ref]", 0, position);
 
             if (EditorGUI.EndChangeCheck())
             {
