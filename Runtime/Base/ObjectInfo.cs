@@ -115,6 +115,13 @@ namespace UnityObjectInfo
         public static bool TryGetByType<LIST>(out LIST info_list)
             where LIST : InfoList, new()
         {
+            if (ByType == null)
+            {
+                Log.Error("[ObjectInfo: TryGetByType] ByType == null");
+                info_list = null;
+                return false;
+            }
+
             if (ByType.TryGetValue(typeof(LIST), out var obj_list))
             {
                 info_list = (LIST)obj_list;
@@ -146,7 +153,7 @@ namespace UnityObjectInfo
 
         public static bool TryGetFirst<INFO>(out INFO info) where INFO : ObjectInfo
         {
-            if(!TryGetByType<INFO>(out var list))
+            if (!TryGetByType<INFO>(out var list))
             {
                 info = default;
                 return false;
