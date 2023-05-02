@@ -92,7 +92,7 @@ namespace UnityObjectInfo
             }
         }
 
-        public void Clear()
+        public virtual void Clear()
         {
             all?.Clear();
             Enabled?.Clear();
