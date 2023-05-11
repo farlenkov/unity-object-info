@@ -112,6 +112,14 @@ namespace UnityObjectInfo
             return info_ref?.ID > 0;
         }
 
+        public static bool IsEnabled<INFO>(this InfoRef<INFO> info_ref) where INFO : ObjectInfo
+        {
+            if (info_ref.TryGetAsset(out var asset))
+                return asset.Enabled;
+            else
+                return false;
+        }
+
         public static bool TryGetAsset<INFO>(this InfoRef<INFO> info_ref, out INFO asset) where INFO : ObjectInfo
         {
             if (!info_ref.IsDefined())
