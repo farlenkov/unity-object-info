@@ -20,6 +20,7 @@ namespace UnityObjectInfo
         internal static Dictionary<Type, InfoList> ByType { get; private set; }
 
         public static bool IsLoaded => ByType != null;
+        public static long ExportDate { get; private set; }
 
 #if UNITY_2017_1_OR_NEWER
 
@@ -47,7 +48,7 @@ namespace UnityObjectInfo
 
 #endif
 
-        public static void LoadFromObjectFields(object sourceObject)
+        public static void LoadFromObjectFields<T>(T sourceObject) where T : SerializationContainer
         {
             var listType = typeof(InfoList);
             var sourceType = sourceObject.GetType();
@@ -56,6 +57,7 @@ namespace UnityObjectInfo
             All = new List<ObjectInfo>();
             ByID = new Dictionary<int, ObjectInfo>();
             ByType = new Dictionary<Type, InfoList>();
+            ExportDate = sourceObject.ExportDate;
 
             foreach (var field in sourceFields)
             {
