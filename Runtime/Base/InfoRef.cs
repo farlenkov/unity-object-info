@@ -77,7 +77,7 @@ namespace UnityObjectInfo
 
         public virtual INFO GetEditorAsset()
         {
-            var all = Resources.LoadAll<INFO>("");
+            var all = Resources.LoadAll<INFO>(string.Empty);
 
             for (var i = 0; i < all.Length; i++)
             {
