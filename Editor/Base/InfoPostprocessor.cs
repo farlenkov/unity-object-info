@@ -9,8 +9,8 @@ namespace UnityObjectInfo
 {
     internal class InfoPostprocessor : AssetPostprocessor
     {
-        static bool has_changes;
-        static ushort last_id;
+        static bool hasChanges;
+        static ushort lastId;
         static internal Dictionary<ushort, ushort> OldIDs = new Dictionary<ushort, ushort>();
 
         static void OnPostprocessAllAssets(
@@ -30,13 +30,13 @@ namespace UnityObjectInfo
             //    string.Join("\n", movedAssets),
             //    string.Join("\n", movedFromAssetPaths));
 
-            has_changes = false;
-            last_id = 0;
+            hasChanges = false;
+            lastId = 0;
 
             foreach (string path in importedAssets)
                 PostprocessObjectInfo(path);
 
-            if (has_changes)
+            if (hasChanges)
             {
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
@@ -45,22 +45,22 @@ namespace UnityObjectInfo
 
         static void PostprocessObjectInfo(string path)
         {
-            var root_info = AssetDatabase.LoadAssetAtPath<ObjectInfo>(path);
+            var rootInfo = AssetDatabase.LoadAssetAtPath<ObjectInfo>(path);
 
-            if (root_info == null)
+            if (rootInfo == null)
                 return;
 
-            PostprocessObjectInfo(root_info);
+            PostprocessObjectInfo(rootInfo);
 
-            var sub_assets = AssetDatabase.LoadAllAssetRepresentationsAtPath(path);
+            var subAssets = AssetDatabase.LoadAllAssetRepresentationsAtPath(path);
 
-            foreach (var sub_asset in sub_assets)
+            foreach (var sub_asset in subAssets)
                 if (sub_asset is ObjectInfo sub_info)
-                    PostprocessObjectInfo(sub_info, root_info);
+                    PostprocessObjectInfo(sub_info, rootInfo);
         }
 
         static void PostprocessObjectInfo(
-            ObjectInfo info, 
+            ObjectInfo info,
             ObjectInfo root = null)
         {
             CheckID(info, root);
@@ -68,52 +68,52 @@ namespace UnityObjectInfo
             var editor = Editor.CreateEditor(info) as InfoEditor;
 
             if (editor != null)
-                has_changes = has_changes || editor.OnImport();
+                hasChanges = hasChanges || editor.OnImport();
         }
 
-        static void CheckID(ObjectInfo info, ObjectInfo root_info)
+        static void CheckID(ObjectInfo info, ObjectInfo rootInfo)
         {
             if (info.ID == 0)
             {
-                SetID(info, root_info);
+                SetID(info, rootInfo);
                 Log.InfoEditor("[ObjectInfoPostprocessor] Add ID: 0 > {0} '{1}'", info.ID, info.name);
             }
             else
             {
-                var other_infos = Resources.LoadAll<ObjectInfo>("");
+                var otherInfos = Resources.LoadAll<ObjectInfo>("");
 
-                for (var i = 0; i < other_infos.Length; i++)
+                for (var i = 0; i < otherInfos.Length; i++)
                 {
-                    var other_info = other_infos[i];
+                    var otherInfo = otherInfos[i];
 
-                    if (other_info.ID == info.ID &&
-                        other_info != info)
+                    if (otherInfo.ID == info.ID &&
+                        otherInfo != info)
                     {
-                        var old_id = info.ID;
-                        SetID(info, root_info);
-                        
-                        OldIDs.Add(info.ID, old_id);
-                        Log.InfoEditor("[ObjectInfoPostprocessor] Change ID: {0} > {1} '{2}'", old_id, info.ID, info.name);
+                        var oldId = info.ID;
+                        SetID(info, rootInfo);
+
+                        OldIDs.Add(info.ID, oldId);
+                        Log.InfoEditor("[ObjectInfoPostprocessor] Change ID: {0} > {1} '{2}'", oldId, info.ID, info.name);
                     }
                 }
             }
         }
 
-        static void SetID(ObjectInfo info, ObjectInfo root_info)
+        static void SetID(ObjectInfo info, ObjectInfo rootInfo)
         {
             info.ID = (ushort)(DateTime.UtcNow.Ticks % ushort.MaxValue);
 
-            if (info.ID == last_id)
-                info.ID = ++last_id;
+            if (info.ID == lastId)
+                info.ID = ++lastId;
             else
-                last_id = info.ID;
+                lastId = info.ID;
 
-            if (root_info != null)
-                EditorUtility.SetDirty(root_info);
+            if (rootInfo != null)
+                EditorUtility.SetDirty(rootInfo);
             else
                 EditorUtility.SetDirty(info);
 
-            has_changes = true;
+            hasChanges = true;
         }
     }
 }

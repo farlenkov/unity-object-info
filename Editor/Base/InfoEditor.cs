@@ -26,7 +26,7 @@ namespace UnityObjectInfo
         public static int InfoField<INFO>(
             string label,
             int id,
-            params GUILayoutOption[] options) 
+            params GUILayoutOption[] options)
             where INFO : ObjectInfo
         {
             var infos = Resources.LoadAll<INFO>("");
@@ -37,7 +37,7 @@ namespace UnityObjectInfo
             string label,
             int id,
             INFO[] infos,
-            params GUILayoutOption[] options) 
+            params GUILayoutOption[] options)
             where INFO : ObjectInfo
         {
             var info = (INFO)null;
@@ -58,9 +58,9 @@ namespace UnityObjectInfo
         }
 
         public static ushort Field<INFO>(
-            string label, 
-            int id, 
-            Rect position) 
+            string label,
+            int id,
+            Rect position)
             where INFO : ObjectInfo
         {
             var infos = Resources.LoadAll<INFO>("");
@@ -71,9 +71,9 @@ namespace UnityObjectInfo
                     info = infos[i];
 
             info = (INFO)EditorGUI.ObjectField(
-                position, 
-                label, 
-                info, 
+                position,
+                label,
+                info,
                 typeof(INFO),
                 false);
 
@@ -84,26 +84,26 @@ namespace UnityObjectInfo
         }
 
         public static int Popup<INFO>(
-            int id, 
-            List<INFO> list, 
-            bool add_none_option = false) 
+            int id,
+            List<INFO> list,
+            bool add_none_option = false)
             where INFO : ObjectInfo
         {
             return Popup(null, id, list, add_none_option);
         }
 
         public static int Popup<INFO>(
-            string label, 
-            int id, 
-            List<INFO> list, 
-            bool add_none_option = false) 
+            string label,
+            int id,
+            List<INFO> list,
+            bool addNoneOption = false)
             where INFO : ObjectInfo
         {
-            var offset = add_none_option ? 1 : 0;
+            var offset = addNoneOption ? 1 : 0;
             var names = new string[list.Count + offset];
             var ids = new int[list.Count + offset];
 
-            if (add_none_option)
+            if (addNoneOption)
             {
                 ids[0] = 0;
                 names[0] = "None";

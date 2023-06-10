@@ -19,50 +19,50 @@ namespace UnityObjectInfo
         // DRAW
 
         public override void OnInspectorGUI()
-        {            
+        {
             DrawDefaultInspector();
             DrawComponentNew(Target);
             DrawComponentOld(Target);
         }
-                
+
         protected void DrawComponentNew(EntityInfo Target)
         {
             if (!EditorUtility.IsPersistent(Target))
                 return;
 
-            var component_fields = GetComponentFields(Target);
+            var componentFields = GetComponentFields(Target);
 
-            for (var i = 0; i < component_fields.Count; i++)
+            for (var i = 0; i < componentFields.Count; i++)
             {
-                var component_field = component_fields[i];
-                var component_ref = component_field.GetValue(Target) as InfoRef;
+                var componentField = componentFields[i];
+                var componentRef = componentField.GetValue(Target) as InfoRef;
 
                 // CHECK DUPLICATE
 
-                if (component_ref.ID > 0)
+                if (componentRef.ID > 0)
                 {
-                    component_fields.RemoveAt(i);
+                    componentFields.RemoveAt(i);
                     i--;
                 }
             }
 
             GUILayout.Space(10);
 
-            var names = new string[component_fields.Count + 1];
+            var names = new string[componentFields.Count + 1];
             names[0] = "Select component to add...";
 
-            for (var i = 0; i < component_fields.Count; i++)
-                names[i + 1] = component_fields[i].Name;
+            for (var i = 0; i < componentFields.Count; i++)
+                names[i + 1] = componentFields[i].Name;
 
-            var selected_index = EditorGUILayout.Popup("Components", 0, names);
+            var selectedIndex = EditorGUILayout.Popup("Components", 0, names);
 
-            if (selected_index > 0)
+            if (selectedIndex > 0)
             {
-                var selected_field = component_fields[selected_index - 1];
-                var selected_ref = selected_field.GetValue(Target) as InfoRef;
-                var component = AddComponent(Target, selected_ref.InfoType, selected_field.Name);
-                
-                selected_ref.ID = component.ID;
+                var selectedField = componentFields[selectedIndex - 1];
+                var selectedRef = selectedField.GetValue(Target) as InfoRef;
+                var component = AddComponent(Target, selectedRef.InfoType, selectedField.Name);
+
+                selectedRef.ID = component.ID;
 
                 EditorUtility.SetDirty(Target);
                 AssetDatabase.SaveAssets();
@@ -92,20 +92,20 @@ namespace UnityObjectInfo
         protected void DrawComponentOld(EntityInfo Target, bool drawUnlinked = true)
         {
             var components = LoadComponents<ComponentInfo>(Target);
-            var component_fields = GetComponentFields(Target);
+            var componentFields = GetComponentFields(Target);
 
-            foreach (var component_field in component_fields)
+            foreach (var componentField in componentFields)
             {
-                var component_ref = component_field.GetValue(Target) as InfoRef;
+                var componentRef = componentField.GetValue(Target) as InfoRef;
 
-                if (component_ref.ID == 0)
+                if (componentRef.ID == 0)
                     continue;
 
                 foreach (var component in components)
                 {
-                    if (component.ID == component_ref.ID)
+                    if (component.ID == componentRef.ID)
                     {
-                        DrawComponent(Target, component, component_ref);
+                        DrawComponent(Target, component, componentRef);
                         components.Remove(component);
                         break;
                     }
@@ -129,14 +129,14 @@ namespace UnityObjectInfo
         static void DrawComponent(
             EntityInfo Target,
             ComponentInfo component,
-            InfoRef component_ref)
+            InfoRef componentRef)
         {
             if (Foldouts == null)
                 Foldouts = new Dictionary<string, bool>();
 
-            var foldout_key = $"{Target.GetType().Name}_{component.ShortName}";
-            var show = Foldouts.GetItem(foldout_key);
-            var component_type = component.GetType();
+            var foldoutKey = $"{Target.GetType().Name}_{component.ShortName}";
+            var show = Foldouts.GetItem(foldoutKey);
+            var componentType = component.GetType();
 
             //show = EditorGUILayout.BeginFoldoutHeaderGroup(
             //    show,
@@ -153,7 +153,7 @@ namespace UnityObjectInfo
 
             GUILayout.BeginHorizontal();
             GUI.skin.button.alignment = TextAnchor.MiddleLeft;
-            show = GUILayout.Toggle(show, (show ? "[-] ":"[+] ") +  component.ShortName, "Button");
+            show = GUILayout.Toggle(show, (show ? "[-] " : "[+] ") + component.ShortName, "Button");
             GUI.skin.button.alignment = TextAnchor.MiddleCenter;
             var remove = GUILayout.Button("Remove", GUILayout.Width(80));
             GUILayout.EndHorizontal();
@@ -171,19 +171,19 @@ namespace UnityObjectInfo
                 GUILayout.EndVertical();
             }
 
-            Foldouts.SetItem(foldout_key, show);
+            Foldouts.SetItem(foldoutKey, show);
 
             if (remove)
-                RemoveComponent(Target, component, component_ref);
+                RemoveComponent(Target, component, componentRef);
         }
 
         static void RemoveComponent(
             EntityInfo Target,
             ComponentInfo component,
-            InfoRef component_ref)
+            InfoRef componentRef)
         {
-            if (component_ref != null)
-                component_ref.ID = 0;
+            if (componentRef != null)
+                componentRef.ID = 0;
 
             DestroyImmediate(component, true);
 
@@ -201,71 +201,71 @@ namespace UnityObjectInfo
 
         bool FixComponentNamesAndRefs()
         {
-            var is_dirty = false;
-            var component_fields = GetComponentFields(Target);
+            var isDirty = false;
+            var componentFields = GetComponentFields(Target);
             var components = LoadComponents<ComponentInfo>(Target);
 
-            foreach (var component_field in component_fields)
+            foreach (var componentField in componentFields)
             {
-                var component_ref = component_field.GetValue(Target) as InfoRef;
+                var componentRef = componentField.GetValue(Target) as InfoRef;
 
-                if (component_ref.ID == 0)
+                if (componentRef.ID == 0)
                     continue;
 
                 // GET Component BY FIELD
 
-                var component_by_field = (ComponentInfo)null;
+                var componentByField = (ComponentInfo)null;
 
                 foreach (var component in components)
-                {                    
-                    if (component.ID == component_ref.ID)
+                {
+                    if (component.ID == componentRef.ID)
                     {
-                        component_by_field = component;
+                        componentByField = component;
                         break;
                     }
 
                     if (InfoPostprocessor.OldIDs.TryGetValue(component.ID, out var old_id))
                     {
-                        if (old_id == component_ref.ID)
+                        if (old_id == componentRef.ID)
                         {
-                            component_by_field = component;
-                            component_ref.ID = component.ID;
-                            is_dirty = true;
+                            componentByField = component;
+                            componentRef.ID = component.ID;
+                            isDirty = true;
                             break;
                         }
                     }
                 }
 
-                if (component_by_field == null)
+                if (componentByField == null)
                 {
                     // FIX Component ID
 
-                    component_ref.ID = 0;
-                    is_dirty = true;
+                    componentRef.ID = 0;
+                    isDirty = true;
                 }
                 else
                 {
                     // FIX Component NAME
 
-                    var component_name = $"{Target.name}_{component_field.Name}";
+                    var componentName = $"{Target.name}_{componentField.Name}";
 
-                    if (component_by_field.name != component_name)
+                    if (componentByField.name != componentName)
                     {
-                        component_by_field.name = component_name;
-                        is_dirty = true;
+                        componentByField.name = componentName;
+                        isDirty = true;
                     }
 
                     // FIX ENTITY ID
 
-                    if (component_by_field.Entity.ID != Target.ID)
+                    if (componentByField.Entity.ID != Target.ID)
                     {
-                        component_by_field.Entity.ID = Target.ID;
-                        is_dirty = true;
+                        componentByField.Entity.ID = Target.ID;
+                        isDirty = true;
                     }
                 }
             }
 
-            return is_dirty;
+            return isDirty;
         }
 
         // COMMON
@@ -273,17 +273,17 @@ namespace UnityObjectInfo
         public static List<FieldInfo> GetComponentFields(EntityInfo info)
         {
             var result = new List<FieldInfo>();
-            var ref_type = typeof(InfoRef);
-            var component_type = typeof(ComponentInfo);
+            var refType = typeof(InfoRef);
+            var componentType = typeof(ComponentInfo);
 
             foreach (var field in info.GetType().GetFields())
             {
-                if (field.FieldType.IsSubclassOf(ref_type))
+                if (field.FieldType.IsSubclassOf(refType))
                 {
                     var preset_ref = field.GetValue(info) as InfoRef;
                     var preset_type = preset_ref.InfoType;
 
-                    if (preset_type.IsSubclassOf(component_type))
+                    if (preset_type.IsSubclassOf(componentType))
                         result.Add(field);
                 }
             }

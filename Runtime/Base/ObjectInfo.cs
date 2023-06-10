@@ -69,8 +69,8 @@ namespace UnityObjectInfo
                 if (list == null)
                 {
                     Log.Error(
-                        "[ObjectInfo: LoadFromObjectFields] ERROR: {0}.{1} is null", 
-                        sourceType.Name, 
+                        "[ObjectInfo: LoadFromObjectFields] ERROR: {0}.{1} is null",
+                        sourceType.Name,
                         field.Name);
 
                     continue;
@@ -86,7 +86,7 @@ namespace UnityObjectInfo
                 }
             }
         }
-         
+
         public static bool TryGetByID<INFO>(int id, out INFO info) where INFO : ObjectInfo
         {
             if (All == null)
@@ -116,43 +116,43 @@ namespace UnityObjectInfo
             return false;
         }
 
-        public static bool TryGetByType<LIST>(out LIST info_list)
+        public static bool TryGetByType<LIST>(out LIST infoList)
             where LIST : InfoList, new()
         {
             if (ByType == null)
             {
                 Log.Error("[ObjectInfo: TryGetByType] ByType == null");
-                info_list = null;
+                infoList = null;
                 return false;
             }
 
             if (ByType.TryGetValue(typeof(LIST), out var obj_list))
             {
-                info_list = (LIST)obj_list;
+                infoList = (LIST)obj_list;
                 return true;
             }
 
-            info_list = new LIST();
+            infoList = new LIST();
 
             for (var i = 0; i < All.Count; i++)
             {
                 var info = All[i];
 
-                if (info_list.InfoType.IsAssignableFrom(info.GetType()))
-                    info_list.Add(info);
+                if (infoList.InfoType.IsAssignableFrom(info.GetType()))
+                    infoList.Add(info);
             }
 
-            if (info_list.Count == 0)
+            if (infoList.Count == 0)
                 return false;
 
-            info_list.Init();
-            ByType.Add(typeof(LIST), info_list);
+            infoList.Init();
+            ByType.Add(typeof(LIST), infoList);
             return true;
         }
 
-        public static bool TryGetByType<INFO>(out InfoList<INFO> info_list) where INFO : ObjectInfo
+        public static bool TryGetByType<INFO>(out InfoList<INFO> infoList) where INFO : ObjectInfo
         {
-            return TryGetByType<InfoList<INFO>>(out info_list);
+            return TryGetByType<InfoList<INFO>>(out infoList);
         }
 
         public static bool TryGetFirst<INFO>(out INFO info) where INFO : ObjectInfo

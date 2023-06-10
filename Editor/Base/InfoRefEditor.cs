@@ -86,12 +86,12 @@ namespace UnityObjectInfo
             while (type != null)
             {
                 var f = type.GetField(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-                
+
                 if (f != null)
                     return f.GetValue(source);
 
                 var p = type.GetProperty(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-                
+
                 if (p != null)
                     return p.GetValue(source, null);
 
@@ -103,10 +103,10 @@ namespace UnityObjectInfo
         static object GetValue_Imp(object source, string name, int index)
         {
             var enumerable = GetValue_Imp(source, name) as System.Collections.IEnumerable;
-            
-            if (enumerable == null) 
+
+            if (enumerable == null)
                 return null;
-            
+
             var enm = enumerable.GetEnumerator();
 
             //while (index-- >= 0)
@@ -114,9 +114,9 @@ namespace UnityObjectInfo
             //return enm.Current;
 
             for (int i = 0; i <= index; i++)
-                if (!enm.MoveNext()) 
+                if (!enm.MoveNext())
                     return null;
-            
+
             return enm.Current;
         }
 
@@ -124,21 +124,21 @@ namespace UnityObjectInfo
             string label,
             int id,
             Rect position,
-            Type info_type)
+            Type infoType)
         {
-            var info_list = Resources.LoadAll<ObjectInfo>("");
+            var infoList = Resources.LoadAll<ObjectInfo>("");
             var info = (ObjectInfo)null;
 
-            for (var i = 0; i < info_list.Length; i++)
+            for (var i = 0; i < infoList.Length; i++)
             {
-                if (info_list[i].ID == id)
+                if (infoList[i].ID == id)
                 {
-                    info = info_list[i];
+                    info = infoList[i];
                     break;
                 }
             }
 
-            info = (ObjectInfo)EditorGUI.ObjectField(position, label, info, info_type, false);
+            info = (ObjectInfo)EditorGUI.ObjectField(position, label, info, infoType, false);
 
             if (info != null)
                 return info.ID;
@@ -149,28 +149,28 @@ namespace UnityObjectInfo
         public static ushort InfoField(
             string label,
             int id,
-            Type info_type,
+            Type infoType,
             params GUILayoutOption[] options)
         {
-            var info_list = Resources.LoadAll<ObjectInfo>("");
+            var infoList = Resources.LoadAll<ObjectInfo>("");
             var info = (ObjectInfo)null;
 
             if (id > 0)
             {
-                for (var i = 0; i < info_list.Length; i++)
+                for (var i = 0; i < infoList.Length; i++)
                 {
-                    if (info_list[i].ID == id)
+                    if (infoList[i].ID == id)
                     {
-                        info = info_list[i];
+                        info = infoList[i];
                         break;
                     }
                 }
             }
 
             if (label == null)
-                info = (ObjectInfo)EditorGUILayout.ObjectField(info, info_type, false, options);
+                info = (ObjectInfo)EditorGUILayout.ObjectField(info, infoType, false, options);
             else
-                info = (ObjectInfo)EditorGUILayout.ObjectField(label, info, info_type, false, options);
+                info = (ObjectInfo)EditorGUILayout.ObjectField(label, info, infoType, false, options);
 
             if (info != null)
                 return info.ID;
@@ -182,8 +182,8 @@ namespace UnityObjectInfo
             where INFO : ObjectInfo
             where REF : InfoRef<INFO>, new()
         {
-            var is_dirty = false;
-            var new_id = (ushort)0;
+            var isDirty = false;
+            var newId = (ushort)0;
 
             if (list == null)
                 list = new List<REF>();
@@ -191,20 +191,20 @@ namespace UnityObjectInfo
             for (var i = 0; i < list.Count; i++)
             {
                 var item = list[i];
-                new_id = InfoField(null, item.ID, typeof(INFO));
+                newId = InfoField(null, item.ID, typeof(INFO));
 
-                if (new_id == 0)
+                if (newId == 0)
                 {
                     list.RemoveAt(i);
-                    is_dirty = true;
+                    isDirty = true;
                     i--;
                 }
                 else
                 {
-                    if (new_id != item.ID)
+                    if (newId != item.ID)
                     {
-                        item.ID = new_id;
-                        is_dirty = true;
+                        item.ID = newId;
+                        isDirty = true;
                     }
                 }
             }
@@ -212,15 +212,15 @@ namespace UnityObjectInfo
             if (list.Count > 0)
                 GUILayout.Space(6);
 
-            new_id = InfoField(null, 0, typeof(INFO));
+            newId = InfoField(null, 0, typeof(INFO));
 
-            if (new_id > 0)
+            if (newId > 0)
             {
-                list.Add(new REF() { ID = new_id });
-                is_dirty = true;
+                list.Add(new REF() { ID = newId });
+                isDirty = true;
             }
 
-            return is_dirty;
+            return isDirty;
         }
     }
 

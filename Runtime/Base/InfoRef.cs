@@ -8,7 +8,7 @@ using UnityUtility;
 namespace UnityObjectInfo
 {
     [Serializable]
-    public class InfoRef 
+    public class InfoRef
     {
         public ushort ID;
         public virtual Type InfoType => typeof(ObjectInfo);
@@ -89,7 +89,7 @@ namespace UnityObjectInfo
 
             return null;
         }
-        
+
         public virtual bool TryGetEditorAsset(out INFO asset)
         {
             asset = GetEditorAsset();
@@ -100,35 +100,35 @@ namespace UnityObjectInfo
 
     public static class InfoRefExt
     {
-        public static bool IsDefined(this InfoRef preset_ref)
+        public static bool IsDefined(this InfoRef presetRef)
         {
             return
-                preset_ref != null &&
-                preset_ref.ID > 0;
+                presetRef != null &&
+                presetRef.ID > 0;
         }
 
-        public static bool IsDefined<INFO>(this InfoRef<INFO> info_ref) where INFO : ObjectInfo
+        public static bool IsDefined<INFO>(this InfoRef<INFO> infoRef) where INFO : ObjectInfo
         {
-            return info_ref?.ID > 0;
+            return infoRef?.ID > 0;
         }
 
-        public static bool IsEnabled<INFO>(this InfoRef<INFO> info_ref) where INFO : ObjectInfo
+        public static bool IsEnabled<INFO>(this InfoRef<INFO> infoRef) where INFO : ObjectInfo
         {
-            if (info_ref.TryGetAsset(out var asset))
+            if (infoRef.TryGetAsset(out var asset))
                 return asset.Enabled;
             else
                 return false;
         }
 
-        public static bool TryGetAsset<INFO>(this InfoRef<INFO> info_ref, out INFO asset) where INFO : ObjectInfo
+        public static bool TryGetAsset<INFO>(this InfoRef<INFO> infoRef, out INFO asset) where INFO : ObjectInfo
         {
-            if (!info_ref.IsDefined())
+            if (!infoRef.IsDefined())
             {
                 asset = null;
                 return false;
             }
 
-            asset = info_ref.GetAsset();
+            asset = infoRef.GetAsset();
             return asset != null;
         }
     }
