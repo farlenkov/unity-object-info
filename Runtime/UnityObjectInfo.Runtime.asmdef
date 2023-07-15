@@ -1,6 +1,6 @@
 {
-    "name": "Game.Info.Runtime",
-    "rootNamespace": "",
+    "name": "UnityObjectInfo.Runtime",
+    "rootNamespace": "UnityObjectInfo",
     "references": [
         "GUID:b21f4b1d6baf90041aa6a65bca236026"
     ],

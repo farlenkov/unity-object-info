@@ -1,6 +1,6 @@
 {
-    "name": "Game.Info.Editor",
-    "rootNamespace": "",
+    "name": "UnityObjectInfo.Editor",
+    "rootNamespace": "UnityObjectInfo",
     "references": [
         "GUID:dd33ba5899b9c6b448fa35d78797723c",
         "GUID:b21f4b1d6baf90041aa6a65bca236026",
