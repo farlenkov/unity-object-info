@@ -7,7 +7,7 @@ namespace UnityObjectInfo
 {
     public abstract class EntityInfo : ObjectInfo
     {
-        
+
     }
 
     [Serializable]

@@ -1,0 +1,19 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityObjectInfo;
+
+namespace MyGame
+{
+    [CreateAssetMenu(menuName = "MyGame/#SCRIPTNAME#", fileName = "#SCRIPTNAME#")]
+    public class #SCRIPTNAME# : EntityInfo
+    {
+       
+    }
+
+    [Serializable]
+    public class #SCRIPTNAME#Ref : InfoRef<#SCRIPTNAME#> { }
+
+    public class #SCRIPTNAME#List : InfoList<#SCRIPTNAME#> { }
+}

@@ -1,0 +1,18 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityObjectInfo;
+
+namespace MyGame
+{
+    public class #SCRIPTNAME# : ComponentInfo
+    {
+       
+    }
+
+    [Serializable]
+    public class #SCRIPTNAME#Ref : InfoRef<#SCRIPTNAME#> { }
+
+    public class #SCRIPTNAME#List : InfoList<#SCRIPTNAME#> { }
+}
