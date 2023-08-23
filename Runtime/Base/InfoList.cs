@@ -21,7 +21,7 @@ namespace UnityObjectInfo
         {
 
         }
-    
+
         internal virtual void AddArray(object[] objects)
         {
 
@@ -56,13 +56,13 @@ namespace UnityObjectInfo
 
         // SERIALIZABLE data
 
-        List<INFO> all = new List<INFO>();
+        List<INFO> all = new();
 
         public List<INFO> All
         {
-            get 
-            { 
-                return all; 
+            get
+            {
+                return all;
             }
             set
             {
@@ -154,7 +154,7 @@ namespace UnityObjectInfo
     public abstract class InfoListNamed<T> : InfoList<T> where T : ObjectInfo
     {
         [NonSerialized] public Dictionary<string, T> ByName;
-        
+
         public override void Init()
         {
             base.Init();
