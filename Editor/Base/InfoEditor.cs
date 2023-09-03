@@ -86,10 +86,10 @@ namespace UnityObjectInfo
         public static int Popup<INFO>(
             int id,
             List<INFO> list,
-            bool add_none_option = false)
+            bool addNoneOption = false)
             where INFO : ObjectInfo
         {
-            return Popup(null, id, list, add_none_option);
+            return Popup(null, id, list, addNoneOption);
         }
 
         public static int Popup<INFO>(
