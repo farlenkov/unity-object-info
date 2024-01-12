@@ -16,7 +16,7 @@ namespace UnityObjectInfo
         {
             EditorGUI.BeginChangeCheck();
 
-            var prop = (InfoRef)GetTargetObjectOfProperty(property);
+            var prop = (InfoRef)property.GetTargetObjectOfProperty();
 
             if (prop != null)
             {
@@ -49,31 +49,6 @@ namespace UnityObjectInfo
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             return 16;
-        }
-
-        static object GetTargetObjectOfProperty(SerializedProperty prop)
-        {
-            if (prop == null)
-                return null;
-
-            var path = prop.propertyPath.Replace(".Array.data[", "[");
-            object obj = prop.serializedObject.targetObject;
-            var elements = path.Split('.');
-
-            foreach (var element in elements)
-            {
-                if (element.Contains("["))
-                {
-                    var elementName = element.Substring(0, element.IndexOf("["));
-                    var index = System.Convert.ToInt32(element.Substring(element.IndexOf("[")).Replace("[", "").Replace("]", ""));
-                    obj = GetValue_Imp(obj, elementName, index);
-                }
-                else
-                {
-                    obj = GetValue_Imp(obj, element);
-                }
-            }
-            return obj;
         }
 
         static object GetValue_Imp(object source, string name)

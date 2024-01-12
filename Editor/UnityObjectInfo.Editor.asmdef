@@ -2,10 +2,10 @@
     "name": "UnityObjectInfo.Editor",
     "rootNamespace": "UnityObjectInfo",
     "references": [
-        "GUID:dd33ba5899b9c6b448fa35d78797723c",
-        "GUID:b21f4b1d6baf90041aa6a65bca236026",
-        "GUID:f6b217057e3e36c4da7fb9724256424d",
-        "GUID:ce392c62d0e46304085053d6fa446861"
+        "UnityObjectInfo.Runtime",
+        "UnityUtility.Runtime",
+        "UnityUtility.Editor",
+        "UnityScriptTemplate.Editor"
     ],
     "includePlatforms": [
         "Editor"
