@@ -35,7 +35,7 @@ namespace UnityObjectInfo
         }
 
         [ContextMenu("Load All")]
-        void LoadAll()
+        public void LoadAll()
         {
             for (var i = 0; i < SceneAssets.Length; i++)
             {
