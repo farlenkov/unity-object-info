@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using UnityEngine;
+using UnityUtility;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -39,13 +40,10 @@ namespace UnityObjectInfo
         {
             for (var i = 0; i < SceneAssets.Length; i++)
             {
-                var sceneAsset = SceneAssets[i];
-                var scenePath = AssetDatabase.GetAssetPath(sceneAsset);
-
                 if (i == 0)
-                    EditorSceneManager.OpenScene(scenePath);
+                    SceneAssets[i].OpenSingle();
                 else
-                    EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Additive);
+                    SceneAssets[i].OpenAdditive();
             }
         }
 
