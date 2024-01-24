@@ -61,10 +61,10 @@ namespace UnityObjectInfo
                         selectedEntity = entityAsset;
 
                     GUI.color = Color.white;
+                    
+                    if (isOpenAllClicked)
+                        return;
                 }
-
-                if (isOpenAllClicked)
-                    return;
 
                 if (selectedEntity == null)
                 {
