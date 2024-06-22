@@ -23,9 +23,9 @@ namespace UnityObjectInfo
 
         // STATIC
 
-        public static int InfoField<INFO>(
+        public static ushort InfoField<INFO>(
             string label,
-            int id,
+            ushort id,
             params GUILayoutOption[] options)
             where INFO : ObjectInfo
         {
@@ -33,9 +33,9 @@ namespace UnityObjectInfo
             return Field(label, id, infos, options);
         }
 
-        public static int Field<INFO>(
+        public static ushort Field<INFO>(
             string label,
-            int id,
+            ushort id,
             INFO[] infos,
             params GUILayoutOption[] options)
             where INFO : ObjectInfo
