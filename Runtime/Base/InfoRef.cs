@@ -74,13 +74,18 @@ namespace UnityObjectInfo
 
         public virtual INFO GetEditorAsset()
         {
+            return GetEditorAsset(ID);
+        }
+
+        public static INFO GetEditorAsset(ushort id)
+        {
             var all = Resources.LoadAll<INFO>(string.Empty);
 
             for (var i = 0; i < all.Length; i++)
             {
                 var item = all[i];
 
-                if (item.ID == ID)
+                if (item.ID == id)
                     return item;
             }
 
