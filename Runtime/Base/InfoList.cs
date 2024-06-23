@@ -46,7 +46,7 @@ namespace UnityObjectInfo
         public List<INFO> Enabled { get; private set; }
 
         [JsonIgnore]
-        public Dictionary<int, INFO> ByID { get; private set; }
+        public Dictionary<ushort, INFO> ByID { get; private set; }
 
         [JsonIgnore]
         public override int Count => all.Count;
@@ -128,8 +128,8 @@ namespace UnityObjectInfo
 
         public override void Init()
         {
-            Enabled = new List<INFO>();
-            ByID = new Dictionary<int, INFO>();
+            Enabled = new ();
+            ByID = new ();
 
             for (var i = 0; i < all.Count; i++)
             {
