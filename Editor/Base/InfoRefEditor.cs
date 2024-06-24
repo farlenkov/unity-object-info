@@ -95,7 +95,7 @@ namespace UnityObjectInfo
             return enm.Current;
         }
 
-        public static ushort InfoField(
+        public static int InfoField(
             string label,
             int id,
             Rect position,
@@ -121,7 +121,7 @@ namespace UnityObjectInfo
                 return 0;
         }
 
-        public static ushort InfoField(
+        public static int InfoField(
             string label,
             int id,
             Type infoType,
@@ -158,7 +158,7 @@ namespace UnityObjectInfo
             where REF : InfoRef<INFO>, new()
         {
             var isDirty = false;
-            var newId = (ushort)0;
+            var newId = 0;
 
             if (list == null)
                 list = new List<REF>();

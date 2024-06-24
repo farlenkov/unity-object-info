@@ -7,7 +7,7 @@ namespace UnityObjectInfo
     [Serializable]
     public class InfoRef
     {
-        public ushort ID;
+        public int ID;
         public virtual Type InfoType => typeof(ObjectInfo);
 
         public override bool Equals(object obj)
@@ -77,7 +77,7 @@ namespace UnityObjectInfo
             return GetEditorAsset(ID);
         }
 
-        public static INFO GetEditorAsset(ushort id)
+        public static INFO GetEditorAsset(int id)
         {
             var all = Resources.LoadAll<INFO>(string.Empty);
 

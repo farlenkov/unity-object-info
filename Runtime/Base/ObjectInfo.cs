@@ -9,7 +9,7 @@ namespace UnityObjectInfo
     public abstract class ObjectInfo : ScriptableObject
     {
         [ReadOnly]
-        public ushort ID;
+        public int ID;
 
         public bool Enabled = true;
 

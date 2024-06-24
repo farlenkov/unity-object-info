@@ -46,7 +46,7 @@ namespace UnityObjectInfo
         public List<INFO> Enabled { get; private set; }
 
         [JsonIgnore]
-        public Dictionary<ushort, INFO> ByID { get; private set; }
+        public Dictionary<int, INFO> ByID { get; private set; }
 
         [JsonIgnore]
         public override int Count => all.Count;

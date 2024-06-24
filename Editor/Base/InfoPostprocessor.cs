@@ -10,8 +10,8 @@ namespace UnityObjectInfo
     internal class InfoPostprocessor : AssetPostprocessor
     {
         static bool hasChanges;
-        static ushort lastId;
-        static internal Dictionary<ushort, ushort> OldIDs = new Dictionary<ushort, ushort>();
+        static int lastId;
+        static internal Dictionary<int, int> OldIDs = new ();
 
         static void OnPostprocessAllAssets(
             string[] importedAssets,
@@ -101,7 +101,7 @@ namespace UnityObjectInfo
 
         static void SetID(ObjectInfo info, ObjectInfo rootInfo)
         {
-            info.ID = (ushort)(DateTime.UtcNow.Ticks % ushort.MaxValue);
+            info.ID = (int)(DateTime.UtcNow.Ticks % ushort.MaxValue);
 
             if (info.ID == lastId)
                 info.ID = ++lastId;
