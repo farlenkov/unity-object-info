@@ -101,12 +101,26 @@ namespace UnityObjectInfo
 
         static void SetID(ObjectInfo info, ObjectInfo rootInfo)
         {
+            var oldId = info.ID;
             info.ID = (int)(DateTime.UtcNow.Ticks % ushort.MaxValue);
 
             if (info.ID == lastId)
                 info.ID = ++lastId;
             else
                 lastId = info.ID;
+
+            if (oldId > 0 && rootInfo != null)
+            {
+                var entityFields = EntityEditor.GetComponentFields((EntityInfo)rootInfo);
+
+                foreach(var field in entityFields)
+                {
+                    var componentRef = field.GetValue(rootInfo) as InfoRef;
+
+                    if (componentRef.ID == oldId)
+                        componentRef.ID = info.ID;
+                }
+            }
 
             if (rootInfo != null)
                 EditorUtility.SetDirty(rootInfo);
