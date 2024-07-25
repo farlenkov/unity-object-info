@@ -175,6 +175,9 @@ namespace UnityObjectInfo
 
 #if UNITY_EDITOR
 
+        public virtual int MinID => 1;
+        public virtual int MaxID => ushort.MaxValue;
+
         public static INFO LoadInfo<INFO>(int id) where INFO : ObjectInfo
         {
             var infos = Resources.LoadAll<INFO>("");

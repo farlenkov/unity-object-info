@@ -102,10 +102,10 @@ namespace UnityObjectInfo
         static void SetID(ObjectInfo info, ObjectInfo rootInfo)
         {
             var oldId = info.ID;
-            info.ID = (int)(DateTime.UtcNow.Ticks % ushort.MaxValue);
+            info.ID = NewID(info, DateTime.UtcNow.Ticks);
 
             if (info.ID == lastId)
-                info.ID = ++lastId;
+                info.ID = NewID(info, ++lastId);
             else
                 lastId = info.ID;
 
@@ -128,6 +128,16 @@ namespace UnityObjectInfo
                 EditorUtility.SetDirty(info);
 
             hasChanges = true;
+        }
+
+        static int NewID(ObjectInfo info, int tryValue)
+        {
+            return info.MinID + tryValue % (info.MaxID - info.MinID);
+        }
+
+        static int NewID(ObjectInfo info, long tryValue)
+        {
+            return info.MinID + (int)(tryValue % (info.MaxID - info.MinID));
         }
     }
 }
