@@ -9,7 +9,7 @@ namespace UnityObjectInfo
 {
     [CanEditMultipleObjects]
     [CustomEditor(typeof(ObjectInfo), true)]
-    public class InfoEditor : Editor
+    public class InfoEditor : BaseEditor
     {
         public override void OnInspectorGUI()
         {
