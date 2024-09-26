@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityUtility;
 
@@ -175,8 +176,8 @@ namespace UnityObjectInfo
 
 #if UNITY_EDITOR
 
-        public virtual int MinID => 1;
-        public virtual int MaxID => ushort.MaxValue;
+        [JsonIgnore] public virtual int MinID => 1;
+        [JsonIgnore] public virtual int MaxID => ushort.MaxValue;
 
         public static INFO LoadInfo<INFO>(int id) where INFO : ObjectInfo
         {
